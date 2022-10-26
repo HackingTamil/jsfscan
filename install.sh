@@ -91,5 +91,6 @@ echo -e "\n-----------------------FINISHED INSTALLING GETJSWORDS.PY-------------
 # Adding JSFscan to Bin
 echo -e "\n-----------------------INSTALLING JSFscan to Bin------------------------"
 ln JSFScan.sh /usr/local/bin/jsfscan
+chmod 777 /usr/local/bin/jsfscan
 echo -e "\n-----------------------INSTALLATION FINISHED------------------------"
 
