@@ -20,7 +20,7 @@ gather_js(){
 echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Started Gathering JsFiles-links\e[0m\n";
 cat "$target" | gau | grep -iE "\.js$" | uniq | sort >> jsfile_links.txt
 cat "$target" | subjs >> jsfile_links.txt
-gospider -S "$target" -c 10 -d 1 -t 20 >tmp
+gospider -S $target -c 10 -d 1 -t 20 >tmp
 cat tmp |grep "javascript" |cut -d"-" -f2 |cut -d" " -f2 >> jsfile_links.txt && rm tmp
 #cat $target | hakrawler -js -depth 2 -scope subs -plain >> jsfile_links.txt
 echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Checking for live JsFiles-links\e[0m\n";
