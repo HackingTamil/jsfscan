@@ -18,10 +18,9 @@ logo
 #Gather JSFilesUrls
 gather_js(){
 echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Started Gathering JsFiles-links\e[0m\n";
-cat "$target" | gau | grep -iE "\.js$" | uniq | sort >> jsfile_links.txt
+cat "$target" | gau --timeout 0 --threads 40 >>gaujstmp && cat gaujstmp | grep -iE "\.js$" | uniq | sort >> jsfile_links.txt && rm gaujstmp
 cat "$target" | subjs >> jsfile_links.txt
-gospider -S $target -c 10 -d 1 -t 20 >tmp
-cat tmp |grep "javascript" |cut -d"-" -f2 |cut -d" " -f2 >> jsfile_links.txt && rm tmp
+gospider -S targets.txt -c 10 -d 1 -t 20 --timeout 0 >>tmp && cat tmp |grep "javascript" |cut -d"-" -f2 |cut -d" " -f2 | grep -iE "\.js" >> jsfile_links.txt && rm tmp
 #cat $target | hakrawler -js -depth 2 -scope subs -plain >> jsfile_links.txt
 echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Checking for live JsFiles-links\e[0m\n";
 cat jsfile_links.txt | httpx -follow-redirects -silent -status-code | grep "[200]" | cut -d ' ' -f1 | sort -u > live_jsfile_links.txt
@@ -86,63 +85,63 @@ mv endpoints.txt jsfile_links.txt jslinksecret.txt live_jsfile_links.txt jswordl
 mv jsfiles/ $dir/
 }
 while getopts ":l:f:esmwvdro:-:" opt;do
-	case ${opt} in
-		- )      case "${OPTARG}" in
+        case ${opt} in
+                - )      case "${OPTARG}" in
 
-			all) 
-				endpoint_js
-				secret_js
-				getjsbeautify
-				wordlist_js
-				var_js
-				domxss_js
-				;;
+                        all) 
+                                endpoint_js
+                                secret_js
+                                getjsbeautify
+                                wordlist_js
+                                var_js
+                                domxss_js
+                                ;;
 
-			*)
+                        *)
                                         if [ "$OPTERR" = 1 ] && [ "${optspec:0:1}" != ":" ]; then
                                         echo "Unknown option --${OPTARG}" >&2
                                         fi
                                         ;;
                         esac;; 
 
-		l ) target=$OPTARG
-		    gather_js
-		    ;;
-                f ) target=$OPTARG
-		    open_jsurlfile
-		    ;;
-		e ) endpoint_js
-		    ;;
-		s ) secret_js
-		    ;;
-		m ) getjsbeautify
-		    ;;
-		w ) wordlist_js
+                l ) target=$OPTARG
+                    gather_js
                     ;;
-		v ) var_js
-		    ;;
-		d ) domxss_js
-		    ;;
-		r ) report
-		    ;;
-		o ) dir=$OPTARG
-		    output
-		    ;;
-		\? | h ) echo "Usage: "
-		     echo "       -l   Gather Js Files Links";
-		     echo "       -f   Import File Containing JS Urls";
+                f ) target=$OPTARG
+                    open_jsurlfile
+                    ;;
+                e ) endpoint_js
+                    ;;
+                s ) secret_js
+                    ;;
+                m ) getjsbeautify
+                    ;;
+                w ) wordlist_js
+                    ;;
+                v ) var_js
+                    ;;
+                d ) domxss_js
+                    ;;
+                r ) report
+                    ;;
+                o ) dir=$OPTARG
+                    output
+                    ;;
+                \? | h ) echo "Usage: "
+                     echo "       -l   Gather Js Files Links";
+                     echo "       -f   Import File Containing JS Urls";
                      echo "       -e   Gather Endpoints For JSFiles";
-		     echo "       -s   Find Secrets For JSFiles";
-		     echo "       -m   Fetch Js Files for manual testing";
-		     echo "       -o   Make an Output Directory to put all things Together";
-		     echo "       -w   Make a wordlist using words from jsfiles";
-		     echo "       -v   Extract Vairables from the jsfiles";
-		     echo "       -d   Scan for Possible DomXSS from jsfiles";
-		     echo "       -r   Generate Scan Report in html";
-		     echo "	  --all Scan Everything!";
-		     ;;
-		: ) echo "Invalid Options $OPTARG require an argument";
-		    ;;
-	esac
+                     echo "       -s   Find Secrets For JSFiles";
+                     echo "       -m   Fetch Js Files for manual testing";
+                     echo "       -o   Make an Output Directory to put all things Together";
+                     echo "       -w   Make a wordlist using words from jsfiles";
+                     echo "       -v   Extract Vairables from the jsfiles";
+                     echo "       -d   Scan for Possible DomXSS from jsfiles";
+                     echo "       -r   Generate Scan Report in html";
+                     echo "       --all Scan Everything!";
+                     ;;
+                : ) echo "Invalid Options $OPTARG require an argument";
+                    ;;
+        esac
 done
 shift $((OPTIND -1))
