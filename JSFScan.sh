@@ -53,9 +53,6 @@ interlace -tL live_jsfile_links.txt -threads 5 -c "bash /root/BB/tools/jsfscan/t
 echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Generating Report!\e[0m\n";
 bash /root/BB/tools/jsfscan/report.sh
 
-
-
-mkdir Output
-mv endpoints.txt jsfile_links.txt jslinksecret.txt live_jsfile_links.txt jswordlist.txt js_var.txt domxss_scan.txt report.html Output/ 2>/dev/null
-mv jsfiles/ Output/
+mv endpoints.txt jsfile_links.txt jslinksecret.txt live_jsfile_links.txt jswordlist.txt js_var.txt domxss_scan.txt report.html jsrecon/ 2>/dev/null
+mv jsfiles/ jsrecon/
 
