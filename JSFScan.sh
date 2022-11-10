@@ -56,6 +56,6 @@ bash /root/BB/tools/jsfscan/report.sh
 
 
 mkdir Output
-mv endpoints.txt jsfile_links.txt jslinksecret.txt live_jsfile_links.txt jswordlist.txt js_var.txt domxss_scan.txt report.html $dir/ 2>/dev/null
+mv endpoints.txt jsfile_links.txt jslinksecret.txt live_jsfile_links.txt jswordlist.txt js_var.txt domxss_scan.txt report.html Output/ 2>/dev/null
 mv jsfiles/ Output/
 
